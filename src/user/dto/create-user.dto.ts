@@ -9,9 +9,9 @@ export class CreateUserDto {
   @IsEmail({}, { message: 'Format email tidak valid' })
   email!: string;
 
-  @IsNotEmpty({ message: 'Nomor telepon wajib diisi' })
+  @IsOptional()
   @IsNumber()
-  phone!: number;
+  phone?: number;
 
   @IsNotEmpty({ message: 'Password wajib diisi' })
   @IsString()
