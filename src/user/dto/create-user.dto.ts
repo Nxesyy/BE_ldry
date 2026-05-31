@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsEmail, MinLength, IsOptional, IsNumber } from 'class-validator';
+import { IsNotEmpty, IsString, IsEmail, MinLength, IsOptional } from 'class-validator';
 
 export class CreateUserDto {
   @IsNotEmpty({ message: 'Nama wajib diisi' })
@@ -9,9 +9,9 @@ export class CreateUserDto {
   @IsEmail({}, { message: 'Format email tidak valid' })
   email!: string;
 
-  @IsNotEmpty()
-  @IsNumber()
-  phone!: number;
+  @IsNotEmpty({ message: 'Nomor telepon wajib diisi' })
+  @IsString()
+  phone!: string;
 
   @IsNotEmpty({ message: 'Password wajib diisi' })
   @IsString()
