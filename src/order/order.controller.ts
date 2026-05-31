@@ -12,6 +12,8 @@ export class OrderController {
   constructor(private readonly orderService: OrderService) {}
 
   @Post()
+  @UseGuards(RolesGuard, JwtAuthGuard)
+  @Roles('ADMIN')
   create(@Body() createOrderDto: CreateOrderDto) {
     return this.orderService.create(createOrderDto);
   }
