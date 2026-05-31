@@ -47,7 +47,6 @@ model User {
 }
 
 model Order {
-  @@map("`orders`")
   id         Int           @id @default(autoincrement())
   orderCode  String        @unique
   userId     Int
