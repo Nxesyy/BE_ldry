@@ -11,8 +11,6 @@ export class OrderService {
 
   private readonly statusSequence: LaundryStatus[] = [
     LaundryStatus.DIPROSES,
-    LaundryStatus.DICUCI,
-    LaundryStatus.DISETRIKA,
     LaundryStatus.SELESAI,
     LaundryStatus.DIAMBIL,
   ];
@@ -38,7 +36,7 @@ export class OrderService {
           status: LaundryStatus.DIPROSES,
         },
       });
-      
+
       await prisma.transaction.create({
         data: {
           transactionCode,
