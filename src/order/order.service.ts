@@ -28,9 +28,7 @@ export class OrderService {
     const orderCode = generateOrderCode();
     const transactionCode = generateTransactionCode();
 
-    // Use Prisma $transaction
     const result = await this.prisma.$transaction(async (prisma) => {
-      // 1. Create Order
       const order = await prisma.order.create({
         data: {
           orderCode,
@@ -40,8 +38,7 @@ export class OrderService {
           status: LaundryStatus.DIPROSES,
         },
       });
-
-      // 2. Create Transaction
+      
       await prisma.transaction.create({
         data: {
           transactionCode,
@@ -52,7 +49,6 @@ export class OrderService {
         },
       });
 
-      // 3. Create Order History
       await prisma.orderHistory.create({
         data: {
           orderId: order.id,

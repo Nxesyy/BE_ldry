@@ -2,6 +2,7 @@ import { Injectable, ConflictException, NotFoundException, BadRequestException }
 import { PrismaService } from '../prisma/prisma.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
+import { Role } from '@prisma/client';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
@@ -14,6 +15,7 @@ export class UserService {
         id: true,
         name: true,
         email: true,
+        phone: true,
         role: true,
         createdAt: true,
         updatedAt: true,
@@ -33,6 +35,7 @@ export class UserService {
         id: true,
         name: true,
         email: true,
+        phone: true,
         role: true,
         createdAt: true,
         updatedAt: true,
@@ -94,6 +97,40 @@ export class UserService {
     return {
       message: 'User berhasil diupdate',
       data: updatedUser,
+    };
+  }
+
+  async create(createUserDto: CreateUserDto) {
+    const { name, email, password, phone } = createUserDto;
+
+    const existingUser = await this.prisma.user.findUnique({ where: { email } });
+    if (existingUser) {
+      throw new ConflictException('Email sudah digunakan');
+    }
+
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    const user = await this.prisma.user.create({
+      data: {
+        name,
+        email,
+        password: hashedPassword,
+        phone,
+        role: Role.CUSTOMER,
+      },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        phone: true,
+        role: true,
+        createdAt: true,
+      },
+    });
+
+    return {
+      message: 'Customer berhasil dibuat',
+      data: user,
     };
   }
 

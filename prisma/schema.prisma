@@ -35,73 +35,53 @@ enum PaymentStatus {
 }
 
 model User {
-  id          Int       @id @default(autoincrement())
+  id Int @id @default(autoincrement())
 
-  name        String
-  email       String    @unique
-  password    String
+  name      String
+  email     String   @unique
+  password  String
+  phone     Int
+  role      Role     @default(CUSTOMER)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  role        Role      @default(CUSTOMER)
-
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
-
-  orders      Order[]
+  orders Order[]
 }
 
 model Order {
-  id              Int              @id @default(autoincrement())
+  id         Int           @id @default(autoincrement())
+  orderCode  String        @unique
+  userId     Int
+  customer   User          @relation(fields: [userId], references: [id])
+  weight     Float
+  totalPrice Int
+  status     LaundryStatus @default(DIPROSES)
+  finishedAt DateTime?
+  createdAt  DateTime      @default(now())
+  updatedAt  DateTime      @updatedAt
 
-  orderCode       String           @unique
-
-  userId          Int
-  customer        User             @relation(fields: [userId], references: [id])
-
-  weight          Float
-  totalPrice      Int
-
-  status          LaundryStatus    @default(DIPROSES)
-
-  finishedAt      DateTime?
-
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
-
-  histories       OrderHistory[]
-
-  transaction     Transaction?
+  histories   OrderHistory[]
+  transaction Transaction?
 }
 
 model OrderHistory {
-  id            Int              @id @default(autoincrement())
-
-  orderId       Int
-  order         Order            @relation(fields: [orderId], references: [id])
-
-  status        LaundryStatus
-
-  createdAt     DateTime         @default(now())
+  id        Int           @id @default(autoincrement())
+  orderId   Int
+  order     Order         @relation(fields: [orderId], references: [id])
+  status    LaundryStatus
+  createdAt DateTime      @default(now())
 }
 
 model Transaction {
-  id                Int               @id @default(autoincrement())
-
-  transactionCode   String            @unique
-
-  amount            Int
-
-  paymentStatus     PaymentStatus     @default(UNPAID)
-
-  paymentMethod     String
-
-  paymentProof      String?
-
-  paidAt            DateTime?
-
-  orderId           Int               @unique
-
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
-
-  order             Order             @relation(fields: [orderId], references: [id])
+  id              Int           @id @default(autoincrement())
+  transactionCode String        @unique
+  amount          Int
+  paymentStatus   PaymentStatus @default(UNPAID)
+  paymentMethod   String
+  paymentProof    String?
+  paidAt          DateTime?
+  orderId         Int           @unique
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+  order           Order         @relation(fields: [orderId], references: [id])
 }
