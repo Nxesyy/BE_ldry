@@ -40,7 +40,7 @@ model User {
   name      String
   email     String   @unique
   password  String
-  phone     Int
+  phone     Int?
   role      Role     @default(CUSTOMER)
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
